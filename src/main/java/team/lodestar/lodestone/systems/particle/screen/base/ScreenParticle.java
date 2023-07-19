@@ -1,14 +1,15 @@
 package team.lodestar.lodestone.systems.particle.screen.base;
 
 import com.mojang.blaze3d.vertex.BufferBuilder;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import team.lodestar.lodestone.systems.particle.screen.LodestoneScreenParticleRenderType;
 
 import java.util.Random;
 
-@OnlyIn(Dist.CLIENT)
+import static net.fabricmc.api.EnvType.CLIENT;
+
+@Environment(CLIENT)
 public abstract class ScreenParticle {
 
    public final ClientLevel level;

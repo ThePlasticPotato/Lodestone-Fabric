@@ -1,5 +1,6 @@
 package team.lodestar.lodestone.systems.network;
 
+import me.pepperbell.simplenetworking.C2SPacket;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
@@ -8,7 +9,7 @@ import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public abstract class LodestoneServerNBTPacket extends LodestoneServerPacket {
+public abstract class LodestoneServerNBTPacket implements C2SPacket {
     protected CompoundTag data;
 
     public LodestoneServerNBTPacket(CompoundTag data) {
@@ -19,12 +20,4 @@ public abstract class LodestoneServerNBTPacket extends LodestoneServerPacket {
         buf.writeNbt(data);
     }
 
-    @Override
-    public final void execute(Supplier<NetworkEvent.Context> context) {
-        execute(context, data);
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public void execute(Supplier<NetworkEvent.Context> context, CompoundTag data) {
-    }
 }

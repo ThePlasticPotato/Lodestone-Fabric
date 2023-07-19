@@ -1,10 +1,7 @@
 package team.lodestar.lodestone.systems.postprocess;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RenderLevelLastEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,8 +10,7 @@ import java.util.List;
  * Handles world-space post-processing.
  * Based on vanilla {@link net.minecraft.client.renderer.PostChain} system, but allows the shader to access the world depth buffer.
  */
-@Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
-public class PostProcessHandler {
+public class PostProcessHandler implements WorldRenderEvents.End {
     private static final List<PostProcessor> instances = new ArrayList<>();
 
     private static boolean didCopyDepth = false;
@@ -38,11 +34,11 @@ public class PostProcessHandler {
         instances.forEach(i -> i.resize(width, height));
     }
 
-    @SubscribeEvent(priority = EventPriority.LOWEST)
-    public static void onWorldRenderLast(RenderLevelLastEvent event) {
+    @Override
+    public void onEnd(WorldRenderContext context) {
         copyDepthBuffer(); // copy the depth buffer if the mixin didn't trigger
 
-        PostProcessor.viewModelStack = event.getPoseStack();
+        PostProcessor.viewModelStack = context.matrixStack();
         instances.forEach(PostProcessor::applyPostProcess);
 
         didCopyDepth = false; // reset for next frame

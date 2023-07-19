@@ -1,10 +1,10 @@
 package team.lodestar.lodestone.systems.postprocess;
 
+import org.jetbrains.annotations.Nullable;
 import team.lodestar.lodestone.LodestoneLib;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.EffectInstance;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 

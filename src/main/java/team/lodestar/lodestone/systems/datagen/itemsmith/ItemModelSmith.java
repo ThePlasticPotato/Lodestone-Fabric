@@ -3,8 +3,6 @@ package team.lodestar.lodestone.systems.datagen.itemsmith;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.client.model.generators.ItemModelProvider;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
 import team.lodestar.lodestone.LodestoneLib;
 import team.lodestar.lodestone.systems.datagen.providers.LodestoneBlockStateProvider;
 import team.lodestar.lodestone.systems.datagen.providers.LodestoneItemModelProvider;

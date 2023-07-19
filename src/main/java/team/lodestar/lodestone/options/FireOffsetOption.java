@@ -1,5 +1,6 @@
 package team.lodestar.lodestone.options;
 
+import io.github.fabricators_of_create.porting_lib.event.client.OverlayRenderCallback;
 import team.lodestar.lodestone.config.ClientConfig;
 import team.lodestar.lodestone.data.LodestoneLangDatagen;
 import team.lodestar.lodestone.systems.option.LodestoneOption;
@@ -8,7 +9,6 @@ import net.minecraft.client.gui.screens.AccessibilityOptionsScreen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraftforge.client.event.ScreenEvent;
 
 public class FireOffsetOption extends ProgressOption implements LodestoneOption {
 
@@ -28,8 +28,4 @@ public class FireOffsetOption extends ProgressOption implements LodestoneOption 
                 (minecraft) -> minecraft.font.split(TOOLTIP, 200));
     }
 
-    @Override
-    public boolean canAdd(ScreenEvent.InitScreenEvent.Post event) {
-        return event.getScreen() instanceof AccessibilityOptionsScreen;
-    }
 }

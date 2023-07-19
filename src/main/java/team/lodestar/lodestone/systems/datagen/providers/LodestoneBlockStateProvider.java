@@ -1,11 +1,11 @@
 package team.lodestar.lodestone.systems.datagen.providers;
 
+import net.minecraft.core.Registry;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.client.model.generators.*;
 import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.registries.ForgeRegistries;
 import team.lodestar.lodestone.systems.datagen.statesmith.*;
 
 import java.util.*;
@@ -52,11 +52,11 @@ public abstract class LodestoneBlockStateProvider extends BlockStateProvider {
     }
 
     public ModelFile predefinedModel(Block block) {
-        return models().getExistingFile(ForgeRegistries.BLOCKS.getKey(block));
+        return models().getExistingFile(Registry.BLOCK.getKey(block));
     }
 
     public ModelFile predefinedModel(Block block, String extension) {
-        return models().getExistingFile(extend(ForgeRegistries.BLOCKS.getKey(block), extension));
+        return models().getExistingFile(extend(Registry.BLOCK.getKey(block), extension));
     }
 
     public ModelFile airModel(Block block) {
@@ -70,7 +70,7 @@ public abstract class LodestoneBlockStateProvider extends BlockStateProvider {
     }
 
     public String getBlockName(Block block) {
-        return ForgeRegistries.BLOCKS.getKey(block).getPath();
+        return Registry.BLOCK.getKey(block).getPath();
     }
 
     public ResourceLocation getBlockTexture(String path) {

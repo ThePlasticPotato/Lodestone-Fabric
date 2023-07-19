@@ -1,5 +1,9 @@
 package team.lodestar.lodestone.capability;
 
+import dev.onyxstudios.cca.api.v3.component.Component;
+import dev.onyxstudios.cca.api.v3.component.ComponentV3;
+import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
+import dev.onyxstudios.cca.api.v3.entity.PlayerComponent;
 import team.lodestar.lodestone.LodestoneLib;
 import team.lodestar.lodestone.helpers.NBTHelper;
 import team.lodestar.lodestone.network.capability.SyncLodestonePlayerCapabilityPacket;
@@ -14,20 +18,10 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.common.capabilities.CapabilityToken;
-import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.network.PacketDistributor;
 
-public class LodestonePlayerDataCapability implements LodestoneCapability {
+public class LodestonePlayerDataCapability implements PlayerComponent<LodestonePlayerDataCapability>, ComponentV3, AutoSyncedComponent {
 
-    public static Capability<LodestonePlayerDataCapability> CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {
+    public static LodestonePlayerDataCapability CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {
     });
 
     public boolean hasJoinedBefore;
@@ -138,6 +132,31 @@ public class LodestonePlayerDataCapability implements LodestoneCapability {
 
     public static LodestonePlayerDataCapability getCapability(Player player) {
         return player.getCapability(CAPABILITY).orElse(new LodestonePlayerDataCapability());
+    }
+
+    @Override
+    public void readFromNbt(CompoundTag tag) {
+
+    }
+
+    @Override
+    public void writeToNbt(CompoundTag tag) {
+
+    }
+
+    @Override
+    public boolean shouldCopyForRespawn(boolean lossless, boolean keepInventory, boolean sameCharacter) {
+        return PlayerComponent.super.shouldCopyForRespawn(lossless, keepInventory, sameCharacter);
+    }
+
+    @Override
+    public void copyForRespawn(LodestonePlayerDataCapability original, boolean lossless, boolean keepInventory, boolean sameCharacter) {
+        PlayerComponent.super.copyForRespawn(original, lossless, keepInventory, sameCharacter);
+    }
+
+    @Override
+    public void copyFrom(LodestonePlayerDataCapability other) {
+        PlayerComponent.super.copyFrom(other);
     }
 
     public static class ClientOnly {

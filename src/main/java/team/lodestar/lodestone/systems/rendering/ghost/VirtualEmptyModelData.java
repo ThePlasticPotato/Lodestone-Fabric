@@ -1,7 +1,7 @@
 package team.lodestar.lodestone.systems.rendering.ghost;
 
-import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.client.model.data.ModelProperty;
+import io.github.fabricators_of_create.porting_lib.model.IModelData;
+import io.github.fabricators_of_create.porting_lib.model.ModelProperty;
 
 public enum VirtualEmptyModelData implements IModelData {
     INSTANCE;

@@ -14,12 +14,12 @@ import java.util.Collection;
 public abstract class LodestoneBlockTagsProvider extends BlockTagsProvider {
 
     public LodestoneBlockTagsProvider(DataGenerator gen, String modId, @Nullable ExistingFileHelper existingFileHelper) {
-        super(gen, modId, existingFileHelper);
+        super(gen);
     }
 
     public void addTagsFromBlockProperties(Collection<Block> blocks) {
         for (Block block : blocks) {
-            LodestoneBlockProperties properties = (LodestoneBlockProperties) block.properties;
+            LodestoneBlockProperties properties = (LodestoneBlockProperties) block.getStateDefinition().getProperties();
             LodestoneDatagenBlockData data = properties.getDatagenData();
             for (TagKey<Block> tag : data.getTags()) {
                 tag(tag).add(block);

@@ -8,8 +8,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraftforge.client.model.generators.ItemModelProvider;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
 
 import java.io.*;
 
@@ -30,7 +28,7 @@ public abstract class LodestoneItemModelProvider extends ItemModelProvider {
     }
 
     public String getItemName(Item item) {
-        return ForgeRegistries.ITEMS.getKey(item).getPath();
+        return Registry.ITEM.getKey(item).getPath();
     }
 
     public ResourceLocation getItemTexture(String path) {

@@ -1,5 +1,6 @@
 package team.lodestar.lodestone.systems.fireeffect;
 
+import net.fabricmc.api.Environment;
 import team.lodestar.lodestone.config.ClientConfig;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
@@ -14,11 +15,11 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+
+import static net.fabricmc.api.EnvType.CLIENT;
 
 
-@OnlyIn(Dist.CLIENT)
+@Environment(CLIENT)
 public abstract class FireEffectRenderer<T extends FireEffectInstance> {
 
     public boolean canRender(T instance) {

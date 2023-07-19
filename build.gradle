@@ -1,173 +1,166 @@
-buildscript {
-    repositories {
-        maven { url = 'https://files.minecraftforge.net/maven' }
-        maven { url = 'https://maven.parchmentmc.org' }
-        maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
-        mavenCentral()
-    }
-    dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: "${forgegradleVersion}", changing: false
-        classpath "org.spongepowered:mixingradle:${mixingradleVersion}"
-        classpath "org.parchmentmc:librarian:${librarianVersion}"
-    }
-}
-apply plugin: 'net.minecraftforge.gradle'
-apply plugin: 'eclipse'
-apply plugin: 'maven-publish'
-apply plugin: 'org.spongepowered.mixin'
-apply plugin: 'org.parchmentmc.librarian.forgegradle'
-apply plugin: 'java-library'
-
-version = "${project.minecraftVersion}-${project.modVersion}"
-if (System.getenv('BUILD_NUMBER') != null) {
-    version += "." + System.getenv('BUILD_NUMBER')
-}
-group = 'team.lodestar.lodestone'
-archivesBaseName = project.modId
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
-
-sourceSets { main.resources.srcDirs += 'src/generated/resources' }
-
-mixin {
-    add sourceSets.main, "${project.modId}.refmap.json"
-    config "${project.modId}.mixins.json"
+plugins {
+	id 'fabric-loom' version '1.3-SNAPSHOT'
+	id 'maven-publish'
 }
 
-minecraft {
-    mappings channel: 'parchment', version: "${parchmentVersion}-${minecraftVersion}"
-    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+version = project.mod_version
+group = project.maven_group
 
-    runs {
-        client {
-            workingDirectory project.file('run')
-
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
-            arg "-mixin.config=" + archivesBaseName + ".mixins.json"
-
-            mods {
-                self {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        server {
-            workingDirectory project.file('run')
-
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
-            arg "-mixin.config=" + archivesBaseName + ".mixins.json"
-
-            mods {
-                self {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        data {
-            workingDirectory project.file('run')
-
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
-            arg "-mixin.config=" + archivesBaseName + ".mixins.json"
-
-            args '--mod', "${project.modId}", '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
-
-            mods {
-                self {
-                    source sourceSets.main
-                }
-            }
-        }
-    }
+base {
+	archivesName = project.archives_base_name
 }
 
 repositories {
-    mavenCentral()
-    maven {
-        name 'Curios maven'
-        url "https://maven.theillusivec4.top/"
-    }
+	// Add repositories to retrieve artifacts from in here.
+	// You should only use this when depending on other mods because
+	// Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
+	// See https://docs.gradle.org/current/userguide/declaring_repositories.html
+	// for more information about repositories.
 
-    maven {
-        name 'JEI maven'
-        url "https://dvs1.progwml6.com/files/maven"
-    }
-    maven {
-        name 'tterrag maven'
-        url "https://maven.tterrag.com/"
-    }
-    maven { url 'https://maven.blamejared.com/' }
-    maven {
-        name = "Curse Maven"
-        url "https://cursemaven.com"
-        content {
-            includeGroup "curse.maven"
-        }
-    }
+	maven {
+		name = 'ParchmentMC'
+		url = 'https://maven.parchmentmc.org'
+	}
+
+	mavenCentral()
+	mavenCentral()
+	maven { url = "https://maven.quiltmc.org/repository/release" } // QM
+	maven { url = "https://maven.parchmentmc.org" } // Parchment
+
+	maven { url = "https://maven.fabricmc.net/" } // FAPI, Loader
+	maven { url = "https://mvn.devos.one/snapshots/" } // Registrate, Porting Lib, Forge Tags, Milk Lib
+	maven { url = "https://jitpack.io/" } // for Porting Lib: Mixin Extras, Fabric ASM
+	maven { url = "https://cursemaven.com" } // Forge Config API Port
+	maven { url = "https://maven.tterrag.com/" } // Flywheel
+	maven { url = "https://maven.shedaniel.me/" } // REI and deps
+	maven { url = "https://api.modrinth.com/maven" } // LazyDFU, Sodium, Sandwichable
+	maven { url = "https://maven.terraformersmc.com/" } // Mod Menu, Trinkets
+	maven { url = "https://modmaven.dev" } // Botania
+	maven { // Reach Entity Attributes
+		url = "https://maven.jamieswhiteshirt.com/libs-release"
+		content { includeGroup("com.jamieswhiteshirt") }
+	}
+	maven {
+		name = 'Ladysnake Mods'
+		url = 'https://maven.ladysnake.org/releases'
+	}
+	maven {
+		name = "Fuzs Mod Resources"
+		url = "https://raw.githubusercontent.com/Fuzss/modresources/main/maven/"
+	}
+	maven { url = "https://cursemaven.com" }
+	maven {
+		url = "https://maven.nova-committee.cn/releases"
+	}
+	maven {
+		name = "Modrinth"
+		url = "https://api.modrinth.com/maven"
+		content {
+			includeGroup "maven.modrinth"
+		}
+	}
+}
+
+loom {
+    runs {
+		// This adds a new gradle task that runs the datagen API: "gradlew runDatagen"
+		datagen {
+			inherit server
+			name "Data Generation"
+			vmArg "-Dfabric-api.datagen"
+			vmArg "-Dfabric-api.datagen.output-dir=${file("src/main/generated")}"
+			vmArg "-Dfabric-api.datagen.modid=lodestone"
+ 
+			runDir "build/datagen"
+		}
+	}
+}
+
+// Add the generated resources to the main source set
+sourceSets {
+	main {
+		resources {
+			srcDirs += [
+					'src/main/generated'
+			]
+		}
+	}
 }
 dependencies {
-    minecraft "net.minecraftforge:forge:${project.minecraftVersion}-${project.forgeVersion}"
+	// To change the versions see the gradle.properties file
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	mappings loom.layered() {
+		officialMojangMappings()
+		parchment("org.parchmentmc.data:parchment-1.18.2:2022.11.06@zip")
+	}
+	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-    // Use this to make sure it functions in the intellij environment
-    if (System.getProperty("idea.sync.active") != "true") {
-        annotationProcessor "org.spongepowered:mixin:${mixinVersion}:processor"
-    }
+	// Fabric API. This is technically optional, but you probably want it anyway.
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-    // JEI Dependency
-    compileOnly fg.deobf("mezz.jei:jei-${minecraftVersion}:${jeiVersion}:api")
-    runtimeOnly fg.deobf("mezz.jei:jei-${minecraftVersion}:${jeiVersion}")
+	// Uncomment the following line to enable the deprecated Fabric API modules. 
+	// These are included in the Fabric API production distribution and allow you to update your mod to the latest modules at a later more convenient time.
+	modImplementation(include("io.github.fabricators_of_create:Porting-Lib:$port_lib_version+$minecraft_version"))
 
-    // Curios dependency
-    api fg.deobf("top.theillusivec4.curios:curios-forge:${minecraftVersion}-${curiosVersion}:api")
-    runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:${minecraftVersion}-${curiosVersion}")
+	modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-api:4.2.0"
 
-    // Other Mod Compatibility
-    api fg.deobf("curse.maven:farmers_delight-398521:3739914")
+	modImplementation "curse.maven:forgeconfigapiport-547434:3943250"
 
-    implementation fg.deobf("com.sammy.malum:malum:1.18.2-1.5.0.1-4")
+	modImplementation "committee.nova.mkb.fabric:mkb-1.18.2:1.1.0"
+
+	implementation 'com.electronwill.night-config:core:3.6.5'
+	implementation 'com.electronwill.night-config:toml:3.6.5'
+
+	modImplementation include("maven.modrinth:deferred-registries:0.1.2")
+//	modApi(include("net.minecraftforge:forgeconfigapiport-fabric:3.2.4"))   // e.g. 5.0.0 for Minecraft 1.19.3
+
+	// Adds a dependency on a specific module
+	// Includes Cardinal Components API as a Jar-in-Jar dependency (optional)
+	include "dev.onyxstudios.cardinal-components-api:cardinal-components-api:4.2.0"
+	// modImplementation "net.fabricmc.fabric-api:fabric-api-deprecated:${project.fabric_version}"
 }
 
-jar {
-    manifest {
-        attributes([
-                "Specification-Title": "Lodestone",
-                "Specification-Vendor": "Lodestar",
-                "Specification-Version": "1",
-                "Implementation-Title": project.name,
-                "Implementation-Version": "${version}",
-                "Implementation-Vendor" :"Lodestar",
-                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-                "MixinConfigs" :"${project.modId}.mixins.json"
-        ])
-    }
+processResources {
+	inputs.property "version", project.version
+
+	filesMatching("fabric.mod.json") {
+		expand "version": project.version
+	}
 }
 
-jar.finalizedBy('reobfJar')
-tasks.withType(GenerateModuleMetadata) {
-    enabled = false
+tasks.withType(JavaCompile).configureEach {
+	it.options.release = 17
 }
 
 java {
-    withJavadocJar()
-    withSourcesJar()
+	// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
+	// if it is present.
+	// If you remove this line, sources will not be generated.
+	withSourcesJar()
+
+	sourceCompatibility = JavaVersion.VERSION_17
+	targetCompatibility = JavaVersion.VERSION_17
 }
 
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            artifactId = archivesBaseName
+jar {
+	from("LICENSE") {
+		rename { "${it}_${project.base.archivesName.get()}"}
+	}
+}
 
-            from components.java
-            fg.component(it)
-            jarJar.component(it)
-        }
-    }
-    repositories {
-        maven {
-            url = uri("file://${System.getenv("local_maven")}")
-        }
-    }
+// configure the maven publication
+publishing {
+	publications {
+		mavenJava(MavenPublication) {
+			from components.java
+		}
+	}
+
+	// See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
+	repositories {
+		// Add repositories to publish to here.
+		// Notice: This block does NOT have the same function as the block in the top level.
+		// The repositories here will be used for publishing your artifact, not for
+		// retrieving dependencies.
+	}
 }

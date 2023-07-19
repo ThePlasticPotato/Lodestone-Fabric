@@ -1,0 +1,6 @@
+accessWidener   v1  named
+accessible field net/minecraft/client/renderer/PostChain passes Ljava/util/List;
+accessible class net/minecraft/client/particle/ParticleEngine$MutableSpriteSet
+accessible field net/minecraft/client/particle/ParticleEngine$MutableSpriteSet sprites Ljava/util/List;
+accessible method net/minecraft/client/renderer/GameRenderer getFov (Lnet/minecraft/client/Camera;FZ)D
+accessible field net/minecraft/client/renderer/EffectInstance samplerMap Ljava/util/Map;

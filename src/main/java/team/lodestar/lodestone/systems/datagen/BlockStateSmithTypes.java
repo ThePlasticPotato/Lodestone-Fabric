@@ -132,25 +132,6 @@ public class BlockStateSmithTypes {
     });
 
     /**
-     * Generates a pressure plate block model and state.
-     */
-    public static BlockStateSmith<PressurePlateBlock> PRESSURE_PLATE_BLOCK = new BlockStateSmith<>(PressurePlateBlock.class, (block, provider) -> {
-        String name = provider.getBlockName(block);
-        String textureName = name.replace("_pressure_plate", "");
-        provider.pressurePlateBlock(block, provider.getBlockTexture(textureName));
-    });
-
-    /**
-     * Generates a button block model and state.
-     */
-    public static BlockStateSmith<ButtonBlock> BUTTON_BLOCK = new BlockStateSmith<>(ButtonBlock.class, ItemModelSmithTypes.BUTTON_ITEM, (block, provider) -> {
-        String name = provider.getBlockName(block);
-        ResourceLocation texture = provider.getBlockTexture(name.replace("_button", ""));
-        provider.buttonBlock(block, texture);
-        provider.models().withExistingParent(name + "_inventory", new ResourceLocation("block/button_inventory")).texture("texture", texture);
-    });
-
-    /**
      * DOOR.
      */
     public static BlockStateSmith<DoorBlock> DOOR_BLOCK = new BlockStateSmith<>(DoorBlock.class, ItemModelSmithTypes.GENERATED_ITEM, (block, provider) -> {
@@ -183,15 +164,6 @@ public class BlockStateSmithTypes {
         String textureName = name.replace("wall_", "");
         ModelFile torchModel = provider.models().torchWall(provider.getBlockName(block), provider.getBlockTexture(textureName));
         provider.horizontalBlock(block, torchModel, 90);
-    });
-
-    /**
-     * Generates a wooden sign block model and state. Works for both standing, and wall oriented signs.
-     */
-    public static BlockStateSmith<SignBlock> WOODEN_SIGN_BLOCK = new BlockStateSmith<>(SignBlock.class, ItemModelSmithTypes.GENERATED_ITEM, (block, provider) -> {
-        String name = provider.getBlockName(block);
-        String particleTextureName = name.replace("_wall", "").replace("_sign", "") + "_planks";
-        provider.getVariantBuilder(block).forAllStates(s -> ConfiguredModel.builder().modelFile(provider.models().sign(name, provider.getBlockTexture(particleTextureName))).build());
     });
 
 }

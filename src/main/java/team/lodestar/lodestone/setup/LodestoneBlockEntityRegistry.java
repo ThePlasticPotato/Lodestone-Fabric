@@ -1,5 +1,11 @@
 package team.lodestar.lodestone.setup;
 
+import com.dm.earth.deferred_registries.DeferredObject;
+import com.dm.earth.deferred_registries.DeferredRegistries;
+import io.github.fabricators_of_create.porting_lib.util.RegistryHelper;
+import io.github.fabricators_of_create.porting_lib.util.RegistryObject;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
 import team.lodestar.lodestone.systems.block.sign.LodestoneStandingSignBlock;
 import team.lodestar.lodestone.systems.block.sign.LodestoneWallSignBlock;
 import team.lodestar.lodestone.systems.blockentity.LodestoneSignBlockEntity;
@@ -8,14 +14,6 @@ import team.lodestar.lodestone.systems.multiblock.MultiBlockComponentEntity;
 import net.minecraft.client.renderer.blockentity.SignRenderer;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.RegistryObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,9 +22,9 @@ import static team.lodestar.lodestone.LodestoneLib.LODESTONE;
 
 
 public class LodestoneBlockEntityRegistry {
-    public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, LODESTONE);
+    public static final RegistryHelper<BlockEntityType<?>> BLOCK_ENTITY_TYPES = DeferredRegistries.create(Registry.BLOCK_ENTITY_TYPE, LODESTONE);
 
-    public static final RegistryObject<BlockEntityType<MultiBlockComponentEntity>> MULTIBLOCK_COMPONENT = BLOCK_ENTITY_TYPES.register("multiblock_component", () -> BlockEntityType.Builder.of(MultiBlockComponentEntity::new, getBlocks(ILodestoneMultiblockComponent.class)).build(null));
+    public static final RegistryObject<BlockEntityType<?>> MULTIBLOCK_COMPONENT = BLOCK_ENTITY_TYPES.register("multiblock_component", () -> BlockEntityType.Builder.of(MultiBlockComponentEntity::new, getBlocks(ILodestoneMultiblockComponent.class)).build(null));
     public static final RegistryObject<BlockEntityType<LodestoneSignBlockEntity>> SIGN = BLOCK_ENTITY_TYPES.register("sign", () -> BlockEntityType.Builder.of(LodestoneSignBlockEntity::new, getBlocks(LodestoneStandingSignBlock.class, LodestoneWallSignBlock.class)).build(null));
 
     public static Block[] getBlocks(Class<?>... blockClasses) {
@@ -51,11 +49,7 @@ public class LodestoneBlockEntityRegistry {
         return matchingBlocks.toArray(new Block[0]);
     }
 
-    @Mod.EventBusSubscriber(modid = LODESTONE, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
-    public static class ClientOnly {
-        @SubscribeEvent
-        public static void registerRenderer(EntityRenderersEvent.RegisterRenderers event) {
-         //   event.registerBlockEntityRenderer(SIGN.get(), SignRenderer::new);
-        }
+    public static <T> T register(Registry<? super T> registry, ResourceLocation id, T entry) {
+        return (registry).add(id, entry);
     }
 }

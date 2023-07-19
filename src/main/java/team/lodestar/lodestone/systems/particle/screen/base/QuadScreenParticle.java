@@ -3,13 +3,14 @@ package team.lodestar.lodestone.systems.particle.screen.base;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.util.Mth;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
+import static net.fabricmc.api.EnvType.CLIENT;
+
+@Environment(CLIENT)
 public abstract class QuadScreenParticle extends ScreenParticle {
    protected float quadSize = 0.1F * (this.random.nextFloat() * 0.5F + 0.5F) * 2.0F;
    protected QuadScreenParticle(ClientLevel pLevel, double pX, double pY) {
@@ -22,7 +23,7 @@ public abstract class QuadScreenParticle extends ScreenParticle {
 
    @Override
    public void render(BufferBuilder bufferBuilder) {
-      float partialTicks = Minecraft.getInstance().timer.partialTick;
+      float partialTicks = Minecraft.getInstance().getDeltaFrameTime();
       float size = getQuadSize(partialTicks) * 10;
       float u0 = getU0();
       float u1 = getU1();

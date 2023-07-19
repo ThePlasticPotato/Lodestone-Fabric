@@ -1,5 +1,6 @@
 package team.lodestar.lodestone.systems.particle.type;
 
+import org.jetbrains.annotations.Nullable;
 import team.lodestar.lodestone.systems.particle.world.GenericParticle;
 import team.lodestar.lodestone.systems.particle.world.WorldParticleOptions;
 import com.mojang.serialization.Codec;
@@ -10,7 +11,7 @@ import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.particles.ParticleType;
 
-import javax.annotation.Nullable;
+
 
 public class LodestoneParticleType extends ParticleType<WorldParticleOptions> {
     public LodestoneParticleType() {
